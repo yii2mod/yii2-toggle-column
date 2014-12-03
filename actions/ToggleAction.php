@@ -1,19 +1,15 @@
 <?php
-/**
- * @link http://phe.me
- * @copyright Copyright (c) 2014 Pheme
- * @license MIT http://opensource.org/licenses/MIT
- */
 
-namespace pheme\grid\actions;
+namespace yii2mod\toggle\actions;
 
 use Yii;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
-use yii\web\MethodNotAllowedHttpException;
+use yii\web\NotFoundHttpException;
 
 /**
- * @author Aris Karageorgos <aris@phe.me>
+ * Class ToggleAction
+ * @package pheme\grid\actions
  */
 class ToggleAction extends Action
 {
@@ -21,16 +17,6 @@ class ToggleAction extends Action
      * @var string name of the model
      */
     public $modelClass;
-
-    /**
-     * @var string model attribute
-     */
-    public $attribute = 'active';
-
-    /**
-     * @var string|array additional condition for loading the model
-     */
-    public $andWhere;
 
     /**
      * @var string|int|boolean what to set active models to
@@ -66,34 +52,27 @@ class ToggleAction extends Action
      * Run the action
      * @param $id integer id of model to be loaded
      *
-     * @throws \yii\web\MethodNotAllowedHttpException
-     * @throws \yii\base\InvalidConfigException
+     * @param $attribute
+     * @throws InvalidConfigException
+     * @throws NotFoundHttpException
+     * @throws \yii\base\ExitException
      * @return mixed
      */
-    public function run($id)
+    public function run($id, $attribute)
     {
-        if (!Yii::$app->request->getIsPost()) {
-            throw new MethodNotAllowedHttpException();
-        }
         $id = (int)$id;
-        $result = null;
 
         if (empty($this->modelClass) || !class_exists($this->modelClass)) {
             throw new InvalidConfigException("Model class doesn't exist");
         }
+
         /* @var $modelClass \yii\db\ActiveRecord */
         $modelClass = $this->modelClass;
-        $attribute = $this->attribute;
-        $model = $modelClass::find()->where(['id' => $id]);
 
-        if (!empty($this->andWhere)) {
-            $model->andWhere($this->andWhere);
-        }
+        $model = $this->findModel($modelClass, $id);
 
-        $model = $model->one();
-
-        if (!$model->hasAttribute($this->attribute)) {
-            throw new InvalidConfigException("Attribute doesn't exist");
+        if (!$model->hasAttribute($attribute)) {
+            throw new InvalidConfigException("Attribute doesn't exist.");
         }
 
         if ($model->$attribute == $this->onValue) {
@@ -101,6 +80,7 @@ class ToggleAction extends Action
         } else {
             $model->$attribute = $this->onValue;
         }
+
         if ($model->save()) {
             if ($this->setFlash) {
                 Yii::$app->session->setFlash('success', $this->flashSuccess);
@@ -119,5 +99,21 @@ class ToggleAction extends Action
             return $controller->redirect($this->redirect);
         }
         return $controller->redirect(Yii::$app->request->getReferrer());
+    }
+
+    /**
+     * Find Model
+     * @param $modelClass
+     * @param $id
+     * @throws NotFoundHttpException
+     * @internal param $model
+     * @author Igor Chepurnoy
+     */
+    public function findModel($modelClass, $id) {
+        if (($model = $modelClass::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('Record does not exist.');
+        }
     }
 }

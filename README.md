@@ -10,13 +10,13 @@ The preferred way to install this extension is through [composer](http://getcomp
 Either run
 
 ```
-php composer.phar require --prefer-dist pheme/yii2-toggle-column "*"
+php composer.phar require --prefer-dist yii2mod/yii2-toggle-column "*"
 ```
 
 or add
 
 ```
-"pheme/yii2-toggle-column": "*"
+"yii2mod/yii2-toggle-column": "*"
 ```
 
 to the require section of your `composer.json` file.
@@ -56,7 +56,7 @@ GridView::widget(
 		'columns' => [
 			'id',
 			[
-				'class' => '\pheme\grid\ToggleColumn',
+				'class' => '\yii2mod\toggle\ToggleColumn',
 				'attribute' => 'active',
 				// Uncomment if  you don't want AJAX
 				// 'enableAjax' => false,

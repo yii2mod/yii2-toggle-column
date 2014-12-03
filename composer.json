@@ -1,5 +1,5 @@
 {
-    "name": "pheme/yii2-toggle-column",
+    "name": "yii2mod/yii2-toggle-column",
     "description": "Provides a toggle data column and action",
     "type": "yii2-extension",
     "keywords": [
@@ -8,11 +8,11 @@
         "toggle",
         "column"
     ],
-    "license": "MIT",
+    "license": "Apache-2.0",
     "authors": [
         {
-            "name": "Aris Karageorgos",
-            "email": "aris@phe.me"
+            "name": "Igor Chepurnoy",
+            "email": "igorzfort@gmail.com"
         }
     ],
     "require": {
@@ -20,7 +20,7 @@
     },
     "autoload": {
         "psr-4": {
-            "\\pheme\\grid\\": ""
+            "yii2mod\\toggle\\": ""
         }
     }
 }

@@ -1,11 +1,6 @@
 <?php
-/**
- * @link http://phe.me
- * @copyright Copyright (c) 2014 Pheme
- * @license MIT http://opensource.org/licenses/MIT
- */
 
-namespace pheme\grid;
+namespace yii2mod\toggle;
 
 use yii\grid\DataColumn;
 use yii\helpers\Html;
@@ -13,7 +8,8 @@ use yii\web\View;
 use Yii;
 
 /**
- * @author Aris Karageorgos <aris@phe.me>
+ * Class ToggleColumn
+ * @package yii2mod\toggle
  */
 class ToggleColumn extends DataColumn
 {
@@ -29,6 +25,11 @@ class ToggleColumn extends DataColumn
      */
     public $enableAjax = true;
 
+    /**
+     * Initializes the object.
+     * This method is invoked at the end of the constructor after the object is initialized with the
+     * given configuration.
+     */
     public function init()
     {
         if ($this->enableAjax) {
@@ -37,14 +38,18 @@ class ToggleColumn extends DataColumn
     }
 
     /**
-     * @inheritdoc
+     * Renders the data cell content.
+     * @param mixed $model the data model
+     * @param mixed $key the key associated with the data model
+     * @param integer $index the zero-based index of the data model among the models array returned by [[GridView::dataProvider]].
+     * @return string the rendering result
      */
     protected function renderDataCellContent($model, $key, $index)
     {
-        $url = [$this->action, 'id' => $model->id];
-
         $attribute = $this->attribute;
         $value = $model->$attribute;
+
+        $url = [$this->action, 'id' => $model->id, 'attribute' => $attribute];
 
         if ($value === null || $value == true) {
             $icon = 'ok';
@@ -80,6 +85,6 @@ $("a.toggle-column").on("click", function(e) {
     return false;
 });
 JS;
-        $this->grid->view->registerJs($js, View::POS_READY, 'pheme-toggle-column');
+        $this->grid->view->registerJs($js, View::POS_READY, 'yii2mod-toggle-column');
     }
 }
