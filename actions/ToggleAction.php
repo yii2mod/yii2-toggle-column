@@ -47,6 +47,12 @@ class ToggleAction extends Action
      * @var string|array URL to redirect to
      */
     public $redirect;
+    
+    /**
+     * @var \Closure a function to be called previous saving model. The anonymous function is preferable to have the
+     * model passed by reference. This is useful when we need to set model with extra data previous update.
+     */
+    public $preProcess;
 
     /**
      * Run the action
@@ -80,7 +86,11 @@ class ToggleAction extends Action
         } else {
             $model->$attribute = $this->onValue;
         }
-
+        // do we have a preProcess function
+        if ($this->preProcess && is_callable($this->preProcess, true)) {
+            call_user_func($this->preProcess, $model);
+        }
+        
         if ($model->save()) {
             if ($this->setFlash) {
                 Yii::$app->session->setFlash('success', $this->flashSuccess);
