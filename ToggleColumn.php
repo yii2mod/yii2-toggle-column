@@ -76,15 +76,15 @@ class ToggleColumn extends DataColumn
     public function registerJs()
     {
         $js = <<< JS
-$("a.toggle-column").on("click", function(e) {
-    e.preventDefault();
-    $.post($(this).attr("href"), function(data) {
-        var pjaxId = $(e.target).closest(".grid-view").parent().attr("id");
-        $.pjax.reload({container:"#" + pjaxId});
-    });
-    return false;
-});
-JS;
+            $("a.toggle-column").on("click", function(e) {
+                e.preventDefault();
+                $.post($(this).attr("href"), function(data) {
+                  var pjaxId = $(e.target).closest(".grid-view").parent().attr("id");
+                  $.pjax.reload({container:"#" + pjaxId});
+                });
+                return false;
+            });
+        JS;
         $this->grid->view->registerJs($js, View::POS_READY, 'yii2mod-toggle-column');
     }
 }
