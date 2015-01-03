@@ -84,7 +84,7 @@ class ToggleColumn extends DataColumn
                 });
                 return false;
             });
-        JS;
+JS;
         $this->grid->view->registerJs($js, View::POS_READY, 'yii2mod-toggle-column');
     }
 }
