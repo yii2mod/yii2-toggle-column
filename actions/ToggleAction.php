@@ -9,7 +9,7 @@ use yii\web\NotFoundHttpException;
 
 /**
  * Class ToggleAction
- * @package pheme\grid\actions
+ * @package yii2mod\toggle\actions
  */
 class ToggleAction extends Action
 {
