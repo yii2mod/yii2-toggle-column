@@ -91,7 +91,7 @@ class ToggleAction extends Action
             call_user_func($this->preProcess, $model);
         }
         
-        if ($model->save()) {
+        if ($model->save(true, [$attribute])) {
             if ($this->setFlash) {
                 Yii::$app->session->setFlash('success', $this->flashSuccess);
             }
