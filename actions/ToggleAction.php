@@ -55,6 +55,11 @@ class ToggleAction extends Action
     public $preProcess;
 
     /**
+     * @var string default pk column name
+     */
+    public $pkColumn = 'id';
+
+    /**
      * Run the action
      * @param $id integer id of model to be loaded
      *
@@ -120,7 +125,7 @@ class ToggleAction extends Action
      * @author Igor Chepurnoy
      */
     public function findModel($modelClass, $id) {
-        if (($model = $modelClass::findOne($id)) !== null) {
+        if (($model = $modelClass::findOne([$this->pkColumn => $id])) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('Record does not exist.');
