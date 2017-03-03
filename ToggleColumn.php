@@ -2,47 +2,46 @@
 
 namespace yii2mod\toggle;
 
+use Yii;
 use yii\grid\DataColumn;
 use yii\helpers\Html;
 use yii\web\View;
-use Yii;
 
 /**
  * Class ToggleColumn
+ *
  * @package yii2mod\toggle
  */
 class ToggleColumn extends DataColumn
 {
     /**
      * Toggle action that will be used as the toggle action in your controller
+     *
      * @var string
      */
     public $action = 'toggle';
 
     /**
      * Whether to use ajax or not
+     *
      * @var bool
      */
     public $enableAjax = true;
 
     /**
-     * Initializes the object.
-     * This method is invoked at the end of the constructor after the object is initialized with the
-     * given configuration.
+     * @inheritdoc
      */
     public function init()
     {
+        parent::init();
+
         if ($this->enableAjax) {
             $this->registerJs();
         }
     }
 
     /**
-     * Renders the data cell content.
-     * @param mixed $model the data model
-     * @param mixed $key the key associated with the data model
-     * @param integer $index the zero-based index of the data model among the models array returned by [[GridView::dataProvider]].
-     * @return string the rendering result
+     * @inheritdoc
      */
     protected function renderDataCellContent($model, $key, $index)
     {
@@ -53,11 +52,12 @@ class ToggleColumn extends DataColumn
 
         if ($value === null || $value == true) {
             $icon = 'ok';
-            $title = Yii::t('yii', 'Off');
+            $title = Yii::t('app', 'Off');
         } else {
             $icon = 'remove';
-            $title = Yii::t('yii', 'On');
+            $title = Yii::t('app', 'On');
         }
+
         return Html::a(
             '<span class="glyphicon glyphicon-' . $icon . '"></span>',
             $url,

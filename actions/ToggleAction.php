@@ -5,10 +5,12 @@ namespace yii2mod\toggle\actions;
 use Yii;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
-use yii\web\NotFoundHttpException;
+use yii\db\ActiveRecord;
+use yii\web\BadRequestHttpException;
 
 /**
  * Class ToggleAction
+ *
  * @package yii2mod\toggle\actions
  */
 class ToggleAction extends Action
@@ -19,12 +21,12 @@ class ToggleAction extends Action
     public $modelClass;
 
     /**
-     * @var string|int|boolean what to set active models to
+     * @var string|int|bool what to set active models to
      */
     public $onValue = 1;
 
     /**
-     * @var string|int|boolean what to set inactive models to
+     * @var string|int|bool what to set inactive models to
      */
     public $offValue = 0;
 
@@ -36,18 +38,18 @@ class ToggleAction extends Action
     /**
      * @var string flash message on success
      */
-    public $flashSuccess = "Model saved";
+    public $flashSuccess = 'Model saved';
 
     /**
      * @var string flash message on error
      */
-    public $flashError = "Error saving Model";
+    public $flashError = 'Error saving Model';
 
     /**
      * @var string|array URL to redirect to
      */
     public $redirect;
-    
+
     /**
      * @var \Closure a function to be called previous saving model. The anonymous function is preferable to have the
      * model passed by reference. This is useful when we need to set model with extra data previous update.
@@ -60,27 +62,30 @@ class ToggleAction extends Action
     public $pkColumn = 'id';
 
     /**
-     * Run the action
-     * @param $id integer id of model to be loaded
+     * @inheritdoc
+     */
+    public function init()
+    {
+        parent::init();
+
+        if ($this->modelClass === null) {
+            throw new InvalidConfigException('The "modelClass" property must be set.');
+        }
+    }
+
+    /**
+     * Change column value
      *
+     * @param $id
      * @param $attribute
+     *
+     * @return \yii\web\Response
+     *
      * @throws InvalidConfigException
-     * @throws NotFoundHttpException
-     * @throws \yii\base\ExitException
-     * @return mixed
      */
     public function run($id, $attribute)
     {
-        $id = (int)$id;
-
-        if (empty($this->modelClass) || !class_exists($this->modelClass)) {
-            throw new InvalidConfigException("Model class doesn't exist");
-        }
-
-        /* @var $modelClass \yii\db\ActiveRecord */
-        $modelClass = $this->modelClass;
-
-        $model = $this->findModel($modelClass, $id);
+        $model = $this->findModel($this->modelClass, $id);
 
         if (!$model->hasAttribute($attribute)) {
             throw new InvalidConfigException("Attribute doesn't exist.");
@@ -91,11 +96,11 @@ class ToggleAction extends Action
         } else {
             $model->$attribute = $this->onValue;
         }
-        // do we have a preProcess function
+
         if ($this->preProcess && is_callable($this->preProcess, true)) {
             call_user_func($this->preProcess, $model);
         }
-        
+
         if ($model->save(true, [$attribute])) {
             if ($this->setFlash) {
                 Yii::$app->session->setFlash('success', $this->flashSuccess);
@@ -105,30 +110,34 @@ class ToggleAction extends Action
                 Yii::$app->session->setFlash('error', $this->flashError);
             }
         }
+
         if (Yii::$app->request->getIsAjax()) {
             Yii::$app->end();
         }
-        /* @var $controller \yii\web\Controller */
-        $controller = $this->controller;
+
         if (!empty($this->redirect)) {
-            return $controller->redirect($this->redirect);
+            return $this->controller->redirect($this->redirect);
         }
-        return $controller->redirect(Yii::$app->request->getReferrer());
+
+        return $this->controller->redirect(Yii::$app->request->getReferrer());
     }
 
     /**
      * Find Model
+     *
      * @param $modelClass
      * @param $id
-     * @throws NotFoundHttpException
-     * @internal param $model
-     * @author Igor Chepurnoy
+     *
+     * @return ActiveRecord
+     *
+     * @throws BadRequestHttpException
      */
-    public function findModel($modelClass, $id) {
+    public function findModel($modelClass, $id)
+    {
         if (($model = $modelClass::findOne([$this->pkColumn => $id])) !== null) {
             return $model;
         } else {
-            throw new NotFoundHttpException('Record does not exist.');
+            throw new BadRequestHttpException('Entity not found by primary key ' . $id);
         }
     }
 }
