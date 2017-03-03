@@ -27,46 +27,25 @@ to the require section of your `composer.json` file.
 Usage
 -----
 
-Once the extension is installed, simply use it in your code by  :
+1) In your GridView columns section:
 
 ```php
-// In your Controller
-use yii2mod\toggle\actions\ToggleAction;
+[
+    'class' => '\yii2mod\toggle\ToggleColumn',
+    'attribute' => 'active',
+],
+```
 
+2) Add `toggle action` to your controller as follows:
+
+```php
 public function actions()
 {
-	return [
-		'toggle' => [
-			'class' => ToggleAction::className(),
-			'modelClass' => 'path\to\your\Model',
-			// Uncomment to enable flash messages
-			//'setFlash' => true,
-		]
-	];
+   return [
+        'toggle' => [
+            'class' => \yii2mod\toggle\actions\ToggleAction::class,
+            'modelClass' => 'path\to\your\Model',
+        ],
+    ];
 }
-
-// In your view
-use yii\grid\GridView;
-use yii\widgets\Pjax;
-
-Pjax::begin();
-
-GridView::widget(
-	[
-		'dataProvider' => $dataProvider,
-		'filterModel' => $searchModel,
-		'columns' => [
-			'id',
-			[
-				'class' => '\yii2mod\toggle\ToggleColumn',
-				'attribute' => 'active',
-				// Uncomment if  you don't want AJAX
-				// 'enableAjax' => false,
-			],
-			['class' => 'yii\grid\ActionColumn'],
-		],
-	]
-);
-
-Pjax::end();
 ```
