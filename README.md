@@ -45,6 +45,15 @@ public function actions()
         'toggle' => [
             'class' => \yii2mod\toggle\actions\ToggleAction::class,
             'modelClass' => 'path\to\your\Model',
+            // if you want to use flash messages
+            'setFlash' => true,
+            'flashSuccess' => 'Success message',
+            'flashError' => 'Error message',
+            'redirect' => 'some-redirect-url',
+            // if you want to use custom code before saving the model
+            'preProcess' => function() {
+                // your custom code
+            }
         ],
     ];
 }
