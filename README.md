@@ -1,5 +1,11 @@
-Toggle data column for Yii2
-===========================
+<p align="center">
+    <a href="https://github.com/yiisoft" target="_blank">
+        <img src="https://avatars0.githubusercontent.com/u/993323" height="100px">
+    </a>
+    <h1 align="center">Toggle Column Widget for Yii 2</h1>
+    <br>
+</p>
+
 Provides a toggle data column and action for Yii Framework 2.0
 
 [![Latest Stable Version](https://poser.pugx.org/yii2mod/yii2-toggle-column/v/stable)](https://packagist.org/packages/yii2mod/yii2-toggle-column) [![Total Downloads](https://poser.pugx.org/yii2mod/yii2-toggle-column/downloads)](https://packagist.org/packages/yii2mod/yii2-toggle-column) [![License](https://poser.pugx.org/yii2mod/yii2-toggle-column/license)](https://packagist.org/packages/yii2mod/yii2-toggle-column)
